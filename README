@@ -2,9 +2,19 @@
 Nimboss: The Nimbus Provisioning API
 ====================================
 
-
 Install
 =======
+
+Create a virtualenv:
+    $ virtualenv nimboss_env
+
+Install the latest package from ooici:
+    $ source nimboss_env/bin/activate
+    $ easy_install --find-links http://ooici.net/packages/ nimboss
+
+
+Developer Install
+=================
 
 Create a virtualenv:
     $ virtualenv nimboss_env
