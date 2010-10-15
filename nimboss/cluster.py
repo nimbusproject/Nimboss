@@ -100,7 +100,9 @@ class ClusterDriver(object):
         Returns a single Node or a list of Nodes.
         """
         node_data = self._create_node_data(spec, **kwargs)
-        return driver.create_node(**node_data)
+        node = driver.create_node(**node_data)
+        node.ctx_name = spec.name
+        return node
 
     def _create_node_data(self, spec, **kwargs):
         """Utility to get correct form of data to create a Node.
