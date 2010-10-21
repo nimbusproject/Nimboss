@@ -101,7 +101,13 @@ class ClusterDriver(object):
         """
         node_data = self._create_node_data(spec, **kwargs)
         node = driver.create_node(**node_data)
-        node.ctx_name = spec.name
+
+        if isinstance(node, (list, tuple)):
+            for n in node:
+                n.ctx_name = spec.name
+        else:
+            node.ctx_name = spec.name
+
         return node
 
     def _create_node_data(self, spec, **kwargs):
