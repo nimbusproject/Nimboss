@@ -76,9 +76,9 @@ def create_contact_element(context):
     Produces a <contact> element for a Context resource
     """
     elem = ET.Element(_ctx_qname('contact'))
-    ET.SubElement(elem, _ctx_qname('brokerURL')).text = context.broker_uri
-    ET.SubElement(elem, _ctx_qname('contextID')).text = context.context_id
-    ET.SubElement(elem, _ctx_qname('secret')).text = context.secret
+    ET.SubElement(elem, _ctx_qname('brokerURL')).text = context['broker_uri']
+    ET.SubElement(elem, _ctx_qname('contextID')).text = context['context_id']
+    ET.SubElement(elem, _ctx_qname('secret')).text = context['secret']
     return elem
 
 def _ctx_qname(tag):
