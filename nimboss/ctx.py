@@ -10,9 +10,7 @@ Connection = httplib2.Http
 
 class ContextClient(object):
     """Broker connection management and utility functionality.
-
     """
-
     def __init__(self, broker_uri, key, secret):
         self.broker_uri = broker_uri
         self.connection = Connection()
@@ -34,7 +32,7 @@ class ContextClient(object):
         location = resp['location']
         body = json.loads(body)
 
-        return ContextResource(location, body)
+        return _resource_from_response(location, body)
 
     def get_status(self, resource):
         """Status of a Context resource.
@@ -55,18 +53,24 @@ class ContextResource(dict):
     """Context created on the broker. 
 
     Used in generation of userdata.
-    Needs a better name?
     """
-    def __init__(self, uri, body):
-        for key, value in body.iteritems():
+    def __init__(self, **kwargs):
+        for key,value in kwargs.iteritems():
             self[key] = value
-        self.uri = str(uri)
-        self['uri'] = self.uri
-        self.broker_uri = self['brokerUri']
-        self.context_id = self['contextId']
+        self.uri = self['uri']
+        self.broker_uri = self['broker_uri']
+        self.context_id = self['context_id']
         self.secret = self['secret']
+
     def __str__(self):
         return self.uri
+
+def _resource_from_response(uri, response):
+    dct = {'broker_uri' : response['brokerUri'], 
+            'context_id' : response['contextId'],
+            'secret' : response['secret'],
+            'uri' : uri}
+    return ContextResource(**dct)
 
 def _status_from_response(response):
     res_nodes = response['nodes']
