@@ -1,3 +1,5 @@
+import sys
+
 import httplib2 # Not in standard library, change later if needed.
 import httplib # for status codes
 
@@ -25,7 +27,12 @@ class ContextClient(object):
         # creating a new context is a POST to the base broker URI
         # context URI is returned in Location header and info for VMs
         # is returned in body
-        (resp, body) = self.connection.request(self.broker_uri, 'POST')
+        try:
+            (resp, body) = self.connection.request(self.broker_uri, 'POST')
+        except Exception, e:
+            trace = sys.exc_info()[2]
+            raise BrokerError("Failed to contact broker: %s" % str(e)), None, trace
+
         if resp.status != httplib.CREATED:
             raise BrokerError("Failed to create new context")
         
@@ -40,7 +47,12 @@ class ContextClient(object):
         Returns a ContextStatus object
         """
         
-        (resp, body) = self.connection.request(str(resource), 'GET')
+        try:
+            (resp, body) = self.connection.request(str(resource), 'GET')
+        except Exception, e:
+            trace = sys.exc_info()[2]
+            raise BrokerError("Failed to contact broker: %s" % str(e)), None, trace
+        
         if resp.status != httplib.OK:
             raise BrokerError("Failed to get status of context")
         try:
