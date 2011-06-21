@@ -2,9 +2,9 @@
 
 setupdict = {
     'name' : 'nimboss',
-    'version' : '0.4.1',
+    'version' : '0.4.2',
     'description' : 'Nimbus cloud client API',
-    'url': 'http://github.com/clemesha-ooi/nimboss',
+    'url': 'http://github.com/nimbusproject/Nimboss',
     'download_url' : 'http://ooici.net/packages',
     'license' : 'Apache 2.0',
     'author' : 'David LaBissoniere',
@@ -24,7 +24,7 @@ try:
     from setuptools import setup, find_packages
     setupdict['packages'] = find_packages()
     setupdict['test_suite'] = 'nimboss.test'
-    setupdict['install_requires'] = ['apache-libcloud', 'httplib2']
+    setupdict['install_requires'] = ['apache-libcloud', 'httplib2', 'simplejson']
     setupdict['include_package_data'] = True
     setup(**setupdict)
 

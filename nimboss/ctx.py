@@ -1,4 +1,5 @@
 import sys
+import base64
 
 import httplib2 # Not in standard library, change later if needed.
 import httplib # for status codes
@@ -18,6 +19,12 @@ class ContextClient(object):
         self.connection = Connection()
         self.connection.add_credentials(key, secret)
 
+        # forcibly add basic auth header to get around Nimbus not
+        # sending WWW-Authenticate header in 401 response, which
+        # httplib2 relies on.
+        auth = base64.b64encode(key + ":" + secret)
+        self.headers = {'Authorization' : 'Basic ' + auth}
+
     def create_context(self):
         """Create a new context with Broker.
 
@@ -28,7 +35,8 @@ class ContextClient(object):
         # context URI is returned in Location header and info for VMs
         # is returned in body
         try:
-            (resp, body) = self.connection.request(self.broker_uri, 'POST')
+            (resp, body) = self.connection.request(self.broker_uri, 'POST', 
+                    headers=self.headers)
         except Exception, e:
             trace = sys.exc_info()[2]
             raise BrokerError("Failed to contact broker: %s" % str(e)), None, trace
@@ -48,7 +56,8 @@ class ContextClient(object):
         """
         
         try:
-            (resp, body) = self.connection.request(str(resource), 'GET')
+            (resp, body) = self.connection.request(str(resource), 'GET',
+                    headers=self.headers)
         except Exception, e:
             trace = sys.exc_info()[2]
             raise BrokerError("Failed to contact broker: %s" % str(e)), None, trace
