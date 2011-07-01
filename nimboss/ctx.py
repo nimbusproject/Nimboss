@@ -61,14 +61,21 @@ class ContextClient(object):
         except Exception, e:
             trace = sys.exc_info()[2]
             raise BrokerError("Failed to contact broker: %s" % str(e)), None, trace
-        
+
         if resp.status != httplib.OK:
+
+            if resp.status == httplib.NOT_FOUND:
+                raise ContextNotFoundError("Context resource not found: %s" % resource)
+            elif resp.status in (httplib.FORBIDDEN, httplib.UNAUTHORIZED):
+                raise BrokerAuthError("User not authorized for context: %s" % resource)
+
             raise BrokerError("Failed to get status of context")
         try:
             response = json.loads(body)
             return _status_from_response(response)
         except:
             raise BrokerError("Failed to parse status response from broker")
+
 
 class ContextResource(dict):
     """Context created on the broker. 
@@ -120,6 +127,7 @@ def _identities_from_response_node(resp_node):
         identities.append(identity)
     return identities
 
+
 class ContextStatus(object):
     """Status information about a context
     """
@@ -128,6 +136,7 @@ class ContextStatus(object):
         self.expected_count = expected_count
         self.complete = complete
         self.error = error
+
 
 class ContextNode(object):
     """A single contextualization node, with one or more identities.
@@ -140,6 +149,7 @@ class ContextNode(object):
         self.error_code = error_code
         self.error_message = error_message
 
+
 class ContextNodeIdentity(object):
     """A single network identity for a node.
     """
@@ -149,10 +159,20 @@ class ContextNodeIdentity(object):
         self.hostname = hostname
         self.pubkey = pubkey
 
+
 class BrokerError(Exception):
     """Error response from Context Broker.
     """
     def __init(self, reason):
         self.reason = reason
         Exception.__init__(self, reason)
+
+
+class ContextNotFoundError(BrokerError):
+    """404 Error response from Context Broker
+    """
+
+class BrokerAuthError(BrokerError):
+    """403 Error response from Context Broker
+    """
 
