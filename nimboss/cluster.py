@@ -87,7 +87,8 @@ class ClusterDriver(object):
         cluster = self.new_bare_cluster(id=context.uri)
 
         for spec in nodes_specs:
-            cluster.add_node(launch_node_spec(spec, **kwargs))
+            cluster.add_node(launch_node_spec(spec, self.node_driver,
+                **kwargs))
         
         return cluster
 
@@ -99,7 +100,7 @@ class ClusterDriver(object):
 
         Returns a single Node or a list of Nodes.
         """
-        node_data = self._create_node_data(spec, **kwargs)
+        node_data = self._create_node_data(spec, driver, **kwargs)
         node = driver.create_node(**node_data)
 
         if isinstance(node, (list, tuple)):
@@ -110,12 +111,21 @@ class ClusterDriver(object):
 
         return node
 
-    def _create_node_data(self, spec, **kwargs):
+    def _create_node_data(self, spec, driver, **kwargs):
         """Utility to get correct form of data to create a Node.
         """
-        image = NodeImage(spec.image, spec.name, self.node_driver)
-        sz = ec2.EC2_INSTANCE_TYPES[spec.size] #XXX generalize (for Nimbus, etc)
-        size = NodeSize(sz['id'], sz['name'], sz['ram'], sz['disk'], sz['bandwidth'], sz['price'], self.node_driver)
+        image = NodeImage(spec.image, spec.name, driver)
+
+        sizes = driver.list_sizes()
+        size = None
+        for asize in sizes:
+            if asize.id == spec.size:
+                size = asize
+                break
+        if size is None:
+            raise KeyError("Node size %s not found for driver %s" %
+                    (spec.size, self.node_driver))
+
         node_data = {
             'name':spec.name,
             'size':size,
@@ -143,16 +153,3 @@ class ClusterDriver(object):
         """
         for (id, node) in cluster.nodes.iteritems():
             node.destroy()
-
-
-# hmmmm, needed? :
-class NimbusClusterDriver(ClusterDriver):
-    nodeDriver = NimbusNodeDriver
-    create_node = nodeDriver.create_node
-    destroy_node = nodeDriver.destroy_node
-
-
-class EC2ClusterDriver(ClusterDriver):
-    nodeDriver = EC2NodeDriver
-    create_node = nodeDriver.create_node
-    destroy_node = nodeDriver.destroy_node

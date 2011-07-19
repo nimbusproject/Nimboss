@@ -2,7 +2,7 @@
 
 setupdict = {
     'name' : 'nimboss',
-    'version' : '0.4.4',
+    'version' : '0.4.5',
     'description' : 'Nimbus cloud client API',
     'url': 'http://github.com/nimbusproject/Nimboss',
     'download_url' : 'http://ooici.net/packages',
