@@ -16,7 +16,7 @@ class ContextClient(object):
     """
     def __init__(self, broker_uri, key, secret):
         self.broker_uri = broker_uri
-        self.connection = Connection()
+        self.connection = Connection(disable_ssl_certificate_validation=True)
         self.connection.add_credentials(key, secret)
 
         # forcibly add basic auth header to get around Nimbus not
