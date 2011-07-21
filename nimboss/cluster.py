@@ -1,10 +1,8 @@
 import hashlib
 
-from libcloud.base import NodeImage, NodeSize
-from libcloud.drivers import ec2
+from libcloud.compute.base import NodeImage
 
 from nimboss.nimbus import NimbusClusterDocument
-from nimboss.node import NimbusNodeDriver, EC2NodeDriver
 
 class Cluster(object):
     """A collection of Nodes.
@@ -78,7 +76,7 @@ class ClusterDriver(object):
         """
         
         if isinstance(clusterdoc, str):
-            nimbuscd = NimbusClusterDocument(clusterdoc)
+            clusterdoc = NimbusClusterDocument(clusterdoc)
         
         if context is None:
             context = self.broker_client.create_context()
@@ -87,7 +85,7 @@ class ClusterDriver(object):
         cluster = self.new_bare_cluster(id=context.uri)
 
         for spec in nodes_specs:
-            cluster.add_node(launch_node_spec(spec, self.node_driver,
+            cluster.add_node(self.launch_node_spec(spec, self.node_driver,
                 **kwargs))
         
         return cluster
