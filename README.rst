@@ -11,30 +11,35 @@ Nimboss: The Nimbus Provisioning API
 Install
 =======
 
-Create a virtualenv:
-    $ virtualenv nimboss_env
+Create a virtualenv::
 
-Install the latest package from ooici:
-    $ source nimboss_env/bin/activate
-    $ easy_install --find-links http://ooici.net/packages/ nimboss
+    virtualenv nimboss_env
+
+Install the latest package from ooici::
+
+    source nimboss_env/bin/activate
+    easy_install --find-links http://ooici.net/packages/ nimboss
 
 
 Developer Install
 =================
 
 Create a virtualenv::
-    $ virtualenv nimboss_env
+
+    virtualenv nimboss_env
 
 Install dependencies::
-    $ pip -E nimboss_env install zope.interface httplib2 simplejson
-    $ cd nimboss_env
-    $ git clone git://github.com/apache/libcloud.git
-    $ cd libcloud; python setup.py install; cd ..
+
+    pip -E nimboss_env install zope.interface httplib2 simplejson
+    cd nimboss_env
+    git clone git://github.com/apache/libcloud.git
+    cd libcloud; python setup.py install; cd ..
 
 Install Nimboss::
-    $ git clone git@github.com:clemesha-ooi/nimboss.git # Read+Write, or use "git://...".
-    $ cd nimboss
-    $ python setup.py install
+
+    git clone git@github.com:clemesha-ooi/nimboss.git # Read+Write, or use "git://...".
+    cd nimboss
+    python setup.py install
 
 
 Tests
@@ -43,8 +48,9 @@ Tests
 Nimboss currently uses Python's unittest framework.
 
 To run tests::
-    $ cd tests
-    $ python tests.py
+
+    cd tests
+    python tests.py
 
 
 
