@@ -22,16 +22,16 @@ Install the latest package from ooici:
 Developer Install
 =================
 
-Create a virtualenv:
+Create a virtualenv::
     $ virtualenv nimboss_env
 
-Install dependencies:
+Install dependencies::
     $ pip -E nimboss_env install zope.interface httplib2 simplejson
     $ cd nimboss_env
     $ git clone git://github.com/apache/libcloud.git
     $ cd libcloud; python setup.py install; cd ..
 
-Install Nimboss:
+Install Nimboss::
     $ git clone git@github.com:clemesha-ooi/nimboss.git # Read+Write, or use "git://...".
     $ cd nimboss
     $ python setup.py install
@@ -42,7 +42,7 @@ Tests
 
 Nimboss currently uses Python's unittest framework.
 
-To run tests:
+To run tests::
     $ cd tests
     $ python tests.py
 
